@@ -1,3 +1,19 @@
+/*
+---
+description: Adds decorator functionality and some basic decorators
+
+license: MIT-style
+
+authors:
+- Maksim Horbachevsky
+
+requires:
+- /Native
+- /$util
+
+provides: [Function.decorate, Function.Decorators]
+*/
+
 Function.implement({
     /**
      * Function method that adds decorator pattern.
@@ -26,7 +42,7 @@ Function.Decorators = {
      *
      *      function(numParam, strParam, boolParam) {
      *          ...
-     *      }.decorate(Function.Decorators.StrictAccess('number', 'string', 'boolean'))
+     *      }.decorate(Function.Decorators.StrictArguments('number', 'string', 'boolean'))
      *
      *      Will require exact 3 arguments with 'number', 'string', 'boolean' types,
      *      otherwise throw error message.
@@ -116,9 +132,9 @@ Function.Decorators = {
      * @example
      *
      * It could be used with `auto-suggestion` that runs request after keypressed:
-     * Press some key, in case no other key pressed within 3000 ms it will make ajax request.
+     * Press some key, in case no other key pressed within 300 ms it will make ajax request.
      *
-     * $('auto-suggested-field').addEvent('keyup', sendRequest.decorate(Function.Decorators.Throttle(3000)));
+     * $('auto-suggested-field').addEvent('keyup', sendRequest.decorate(Function.Decorators.Throttle(300)));
      *
      */
     Debounce: function(interval) {
