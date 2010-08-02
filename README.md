@@ -7,13 +7,8 @@ How to use
 ----------
 
 **Function.decorate**
+
 Function method that adds decorator pattern.
-
-@method decorate
-@param decorator {Function} - function that will be used for decoration
-@return {Function} - decorated function
-
-@example
 
 	var someFunction() {
 		...
@@ -28,14 +23,8 @@ Function.Decorators
 Function.Decorators is a collection of some mostly used decorators:
 
 **Function.Decorators.StrictArguments**
+
 Decorate function with parameters validation.
-
-@method StrictArguments
-@params {Arguments} list of valid types of arguments and its amount
-@return {Function} - decorated function
-@requires $type function to validate arguments types
-
-@example
 
 	function(numParam, strParam, boolParam) {
 		...
@@ -45,14 +34,8 @@ Will require exact 3 arguments with 'number', 'string', 'boolean' types, otherwi
 
 
 **Function.Decorators.StrictReturn**
+
 Decorate function with returned value validation.
-
-@method StrictReturn
-@param type {String} - required type of returned value
-@return {Function} - decorated function
-@requires $type function to validate arguments types
-
-@example
 
 	function() {
 		...
@@ -63,13 +46,8 @@ Will require 'number' type value to be returned by the function, otherwise throw
 
 
 **Function.Decorators.Throttle**
+
 Decorate function with trottle pattern: it allows to call function only once per `interval` other calls within this interval will be ignored.
-
-@method Throttle
-@param interval {Number} - interval in milliseconds
-@return {Function} - decorated function
-
-@example
 
 	function throttled() {
 		...
@@ -79,13 +57,8 @@ In case throttled() called it will run immediately and other calls within 3000ms
 
 
 **Function.Decorators.Debounce**
+
 Decorate function with debounce pattern: it allows to slow down the function calls, in case debounced function is called it will run only after `interval`. In case function will be called within this interval it will clear old one and create new interval.
-
-@method Debounce
-@param interval {Number} - interval in milliseconds
-@return {Function} - decorated function
-
-@example
 
 It could be used with `auto-suggestion` that runs request after keypressed:
 Press some key, in case no other key pressed within 300 ms it will make ajax request.
@@ -97,13 +70,8 @@ Press some key, in case no other key pressed within 300 ms it will make ajax req
 
 
 **Function.Decorators.Queue**
+
 Decorate function with queue pattern: all function calls will be run one by one after `interval` ms.
-
-@method Queue
-@param interval {Number} - interval in milliseconds
-@return {Function} - decorated function
-
-@example
 
 	function queued() {
 		alert('call')
