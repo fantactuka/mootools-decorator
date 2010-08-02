@@ -12,6 +12,7 @@ requires:
 - /$util
 
 provides: [Function.decorate, Function.Decorators]
+...
 */
 
 Function.implement({
