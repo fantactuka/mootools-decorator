@@ -85,3 +85,6 @@ Decorate function with queue pattern: all function calls will be run one by one 
 	alert('call'); // After 3000 ms
 	alert('call'); // After 6000 ms
 
+
+
+Check source for more docs
