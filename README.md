@@ -32,6 +32,7 @@ Decorate function with parameters validation.
 Will require exact 3 arguments with 'number', 'string', 'boolean' types, otherwise throw error message.
 
 
+
 **Function.Decorators.StrictReturn**
 
 Decorate function with returned value validation.
@@ -42,6 +43,7 @@ Decorate function with returned value validation.
 	}.decorate(Function.Decorators.StrictReturn('number'))
 
 Will require 'number' type value to be returned by the function, otherwise throw error message.
+
 
 
 **Function.Decorators.Throttle**
@@ -55,6 +57,7 @@ Decorate function with trottle pattern: it allows to call function only once per
 In case throttled() called it will run immediately and other calls within 3000ms will be ignored.
 
 
+
 **Function.Decorators.Debounce**
 
 Decorate function with debounce pattern: it allows to slow down the function calls, in case debounced function is called it will run only after `interval`. In case function will be called within this interval it will clear old one and create new interval.
@@ -66,6 +69,7 @@ Press some key, in case no other key pressed within 300 ms it will make ajax req
 		'keyup',
 		sendRequest.decorate(Function.Decorators.Throttle(300))
 	);
+
 
 
 **Function.Decorators.Queue**
@@ -85,6 +89,7 @@ Decorate function with queue pattern: all function calls will be run one by one 
 	alert('call'); // After 6000 ms
 
 
+
 **Function.Decorators.Profile**
 
 Decorate function with fireBug profiler, so each run will be profiled with it
@@ -92,6 +97,7 @@ Decorate function with fireBug profiler, so each run will be profiled with it
 	var calculating = function() {
 		...
 	}.decorate(Function.Decorators.Profile('Profiling calculating() method'));
+
 
 
 **Function.Decorators.Deprecate**
