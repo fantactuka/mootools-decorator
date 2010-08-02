@@ -41,7 +41,7 @@ Function.Decorators = {
      * @requires $type function to validate arguments types
      * @example
      *
-     *      function(numParam, strParam, boolParam) {
+     *      var example = function(numParam, strParam, boolParam) {
      *          ...
      *      }.decorate(Function.Decorators.StrictArguments('number', 'string', 'boolean'))
      *
@@ -73,7 +73,7 @@ Function.Decorators = {
      * @requires $type function to validate arguments types
      * @example
      *
-     *      function() {
+     *      var example = function() {
      *          ...
      *          retrun result;
      *      }.decorate(Function.Decorators.StrictReturn('number'))
@@ -102,7 +102,7 @@ Function.Decorators = {
      *
      * @example
      *
-     *      function throttled() {
+     *      var throttled = function() {
      *          ...
      *          retrun result;
      *      }.decorate(Function.Decorators.Throttle(3000))
@@ -157,17 +157,13 @@ Function.Decorators = {
      *
      * @example
      *
-     *      function queued() {
-     *          alert('call')
+     *      var queued = function(a) {
+     *          alert(a);
      *      }.decorate(Function.Decorators.Queue(3000))
      *
-     *      queued();
-     *      queued();
-     *      queued();
-     *
-     *      alert('call'); // Shown immediately
-     *      alert('call'); // After 3000 ms
-     *      alert('call'); // After 6000 ms
+     *      queued(1); // Runs immediately
+     *      queued(2); // After 3000 ms
+     *      queued(3); // After 6000 ms
      *
      */
     Queue: function(interval) {
@@ -187,6 +183,64 @@ Function.Decorators = {
                     }), interval);
                 })();
             }
+        };
+    },
+
+    
+    /**
+     * Decorate function with fireBug profiler, so each run will be profiled with it
+     *
+     * @method Profile
+     * @param message {String} - profile title
+     * @return {Function} - decorated function
+     *
+     * @example
+     *
+     *      var calculating = function() {
+     *          ...
+     *      }.decorate(Function.Decorators.Profile('Profiling calculating() method'));
+     */
+    Profile: function(message) {
+        return function(method, args) {
+            var console = window['console'];
+            console && console.profile(message);
+            var result = method.apply(this, args);
+            console && console.profileEnd();
+            return result;
+        };
+    },
+
+
+    /**
+     * Decorate function deprecation warning
+     *
+     * @method Deprecate
+     * @param message {String} - deprecation warning
+     * @param eachCall {Boolean} - if true will show warning each time the function is called,
+     * otherwise only at the first time
+     * @return {Function} - decorated function
+     *
+     * @requires Log
+     *
+     * @example
+     *
+     *      var getElementByClass = function() {
+     *          ...
+     *      }.decorate(Function.Decorators.Deprecate('This method is deprecated. Use $$ instead'));
+     *
+     *      Console will show the deprecation warning:
+     *      'This method is deprecated. Use $$ instead' + stack that will help to find where this method was used
+     *      
+     *
+     */
+    Deprecate: function(message, eachCall) {
+        var warned = false;
+        return function(method, args) {
+            if (!warned || eachCall) {
+                warned = true;
+                Log.logger((new Error(message, method)).stack);
+            }
+            return method.apply(this, args);
         };
     }
 };

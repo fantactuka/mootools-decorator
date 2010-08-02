@@ -20,7 +20,6 @@ Function method that adds decorator pattern.
 Function.Decorators
 ----------
 
-Function.Decorators is a collection of some mostly used decorators:
 
 **Function.Decorators.StrictArguments**
 
@@ -85,6 +84,26 @@ Decorate function with queue pattern: all function calls will be run one by one 
 	alert('call'); // After 3000 ms
 	alert('call'); // After 6000 ms
 
+
+**Function.Decorators.Profile**
+
+Decorate function with fireBug profiler, so each run will be profiled with it
+
+	var calculating = function() {
+		...
+	}.decorate(Function.Decorators.Profile('Profiling calculating() method'));
+
+
+**Function.Decorators.Deprecate**
+
+Decorate function deprecation warning
+
+	var getElementByClass = function() {
+		...
+	}.decorate(Function.Decorators.Deprecate('This method is deprecated. Use $$ instead'));
+
+Console will show the deprecation warning:
+`This method is deprecated. Use $$ instead` + call stack that will help to find where this method was used
 
 
 Check source for more docs
