@@ -1,5 +1,6 @@
 .idea
 index.html
-decorator.iml
+*.iml
+*.ipr
 Source/Mootools.js
 Source/MootoolsMore.js
