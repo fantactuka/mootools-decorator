@@ -24,11 +24,8 @@ OR
 Also it could be a name of the decorator from the collection
 
 
-Function.Decorators.Collection
+Function.Decorators.add
 ----------
-
-
-**Function.Decorators.add**
 
 Adds decoraton into collection that it can be applied by name
 
