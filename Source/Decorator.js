@@ -6,6 +6,7 @@ license: MIT-style
 
 authors:
 - Maksim Horbachevsky
+- Arian Stolwijk (proposed to use string shortcut for decorators from the collection) 
 
 requires:
 - /Native

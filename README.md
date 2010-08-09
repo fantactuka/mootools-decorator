@@ -125,7 +125,7 @@ Decorate function with queue pattern: all function calls will be run one by one 
 
 
 
-**Function.Decorators.Profile**
+**profile**
 
 Decorate function with fireBug profiler, so each run will be profiled with it
 
@@ -148,3 +148,5 @@ Console will show the deprecation warning:
 
 
 Check source for more docs
+
+
