@@ -19,22 +19,87 @@ Function.implement({
     /**
      * Function method that adds decorator pattern.
      * @method decorate
-     * @param decorator {Function} - function that will be used for decoration
+     * @params
+     *      - decorator {Function} - function that will be used for decoration
+     * OR
+     *      - decoratorName {String} - function name from Function.Decorators.Collection or added with Function.Decorators.add()
+     *      - decoratorArgs* {Arguments} - decorator arguments
      * @return {Function} - decorated function
+     *
+     * @example
+     *
+     *      var method = function() {
+     *          ...
+     *      }.decorate(decorator(arg1, arg2, ...));
+     *
+     * OR
+     *
+     *      var method = function() {
+     *          ...
+     *      }.decorate('decoratorName', arg1, arg2, ...);
+     *
      */
-    decorate: function(decorator) {
-        var method = this;
-        return function() {
-            return decorator.apply(this, [method, arguments]);
-        };
+    decorate: function() {
+        var args = Array.prototype.slice.call(arguments), decorator = args.shift(), method = this;
+
+        if ($type(decorator) == 'function') {
+            return function() {
+                return decorator.apply(this, [method, arguments]);
+            };
+        } else {
+            return function() {
+                return Function.Decorators.Collection[decorator](args).apply(this, [method, arguments]);
+            };
+        }
     }
 });
 
-Function.Decorators = {
+Function.Decorators = {};
+
+/**
+ *
+ * Adds decoraton into collection that it can be applied by name
+ *
+ * @method add
+ * @param name {String} - decorator name
+ * @param decorator {Function} - decorating function
+ *
+ * @example
+ *
+ *      var outputFormat = function(limit) {
+ *          return function(method, args) {
+ *              return method.apply(this, args).substr(0, limit);
+ *          }
+ *      }
+ *
+ *      Function.Decorators.add('outputFormat', outputFormatter);
+ *
+ * And later:
+ *
+ *      var getOuput = function() {
+ *          ...
+ *          return someString;
+ *      }.decorate('outputFormat', 30); // Limit output string to 30 chars 
+ *
+ * OR it's still possible to use it dirrectly from collection
+ *
+ *      var getOuput = function() {
+ *          ...
+ *          return someString;
+ *      }.decorate(Function.Decorators.Collection.outputFormatter(30));
+ *
+ */
+Function.Decorators.add = function(name, decorator) {
+    Function.Decorators.Collection[name] = decorator;
+};
+
+Function.Decorators.Collection = {
+
+
     /**
      * Decorate function with parameters validation.
      *
-     * @method StrictArguments
+     * @method strictArguments
      * @params {Arguments} list of valid types of arguments and its amount
      * @return {Function} - decorated function
      *
@@ -43,12 +108,12 @@ Function.Decorators = {
      *
      *      var example = function(numParam, strParam, boolParam) {
      *          ...
-     *      }.decorate(Function.Decorators.StrictArguments('number', 'string', 'boolean'))
+     *      }.decorate('strictArguments', 'number', 'string', 'boolean')
      *
      *      Will require exact 3 arguments with 'number', 'string', 'boolean' types,
      *      otherwise throw error message.
      */
-    StrictArguments: function() {
+    strictArguments: function() {
         var types = arguments;
         return function(method, args) {
             if(types.length != args.length) {
@@ -63,10 +128,11 @@ Function.Decorators = {
         };
     },
 
+
     /**
      * Decorate function with returned value validation.
      *
-     * @method StrictReturn
+     * @method strictReturn
      * @param type {String} - required type of returned value
      * @return {Function} - decorated function
      *
@@ -76,12 +142,12 @@ Function.Decorators = {
      *      var example = function() {
      *          ...
      *          retrun result;
-     *      }.decorate(Function.Decorators.StrictReturn('number'))
+     *      }.decorate('strictReturn', 'number')
      *
      *      Will require 'number' type value to be returned by the function,
      *      otherwise throw error message.
      */
-    StrictReturn: function(type) {
+    strictReturn: function(type) {
         return function(method, args) {
             var result = method.apply(this, args);
             if($type(result) != type) {
@@ -92,11 +158,12 @@ Function.Decorators = {
         };
     },
 
+
     /**
      * Decorate function with trottle pattern: it allows to call function only once per `interval`
      * other calls within this interval will be ignored.
      *
-     * @method Throttle
+     * @method throttle
      * @param interval {Number} - interval in milliseconds
      * @return {Function} - decorated function
      *
@@ -105,13 +172,13 @@ Function.Decorators = {
      *      var throttled = function() {
      *          ...
      *          retrun result;
-     *      }.decorate(Function.Decorators.Throttle(3000))
+     *      }.decorate('throttle', 3000)
      *
      *      In case throttled() called it will run immediately and in case it will be called again within 3000ms
      *      all these calls will be ignored.
      *
      */
-    Throttle: function(interval) {
+    throttle: function(interval) {
         var timer = null;
         return function(method, args) {
             if(!timer) {
@@ -121,12 +188,13 @@ Function.Decorators = {
         };
     },
 
+
     /**
      * Decorate function with debounce pattern: it allows to slow down the function calls,
      * in case debounced function is called it will run only after `interval`. In case function
      * will be called within this interval it will clear old one and create new interval.
      *
-     * @method Debounce
+     * @method debounce
      * @param interval {Number} - interval in milliseconds
      * @return {Function} - decorated function
      *
@@ -135,10 +203,10 @@ Function.Decorators = {
      * It could be used with `auto-suggestion` that runs request after keypressed:
      * Press some key, in case no other key pressed within 300 ms it will make ajax request.
      *
-     * $('auto-suggested-field').addEvent('keyup', sendRequest.decorate(Function.Decorators.Throttle(300)));
+     * $('auto-suggested-field').addEvent('keyup', sendRequest.decorate('debounce', 300));
      *
      */
-    Debounce: function(interval) {
+    debounce: function(interval) {
         var timer = null;
         return function(method, args) {
             var context = this;
@@ -151,7 +219,7 @@ Function.Decorators = {
     /**
      * Decorate function with queue pattern: all function calls will be run one by one after `interval` ms.
      *
-     * @method Queue
+     * @method queue
      * @param interval {Number} - interval in milliseconds
      * @return {Function} - decorated function
      *
@@ -159,14 +227,14 @@ Function.Decorators = {
      *
      *      var queued = function(a) {
      *          alert(a);
-     *      }.decorate(Function.Decorators.Queue(3000))
+     *      }.decorate('queue', 3000)
      *
      *      queued(1); // Runs immediately
      *      queued(2); // After 3000 ms
      *      queued(3); // After 6000 ms
      *
      */
-    Queue: function(interval) {
+    queue: function(interval) {
         var calls = [];
         var timer = null;
         return function(method, args) {
@@ -190,7 +258,7 @@ Function.Decorators = {
     /**
      * Decorate function with fireBug profiler, so each run will be profiled with it
      *
-     * @method Profile
+     * @method profile
      * @param message {String} - profile title
      * @return {Function} - decorated function
      *
@@ -198,9 +266,9 @@ Function.Decorators = {
      *
      *      var calculating = function() {
      *          ...
-     *      }.decorate(Function.Decorators.Profile('Profiling calculating() method'));
+     *      }.decorate('profile', 'Profiling calculating() method');
      */
-    Profile: function(message) {
+    profile: function(message) {
         return function(method, args) {
             var console = window['console'];
             console && console.profile(message);
@@ -214,7 +282,7 @@ Function.Decorators = {
     /**
      * Decorate function deprecation warning
      *
-     * @method Deprecate
+     * @method deprecate
      * @param message {String} - deprecation warning
      * @param eachCall {Boolean} - if true will show warning each time the function is called,
      * otherwise only at the first time
@@ -226,14 +294,14 @@ Function.Decorators = {
      *
      *      var getElementByClass = function() {
      *          ...
-     *      }.decorate(Function.Decorators.Deprecate('This method is deprecated. Use $$ instead'));
+     *      }.decorate('deprecate', 'This method is deprecated. Use $$ instead');
      *
      *      Console will show the deprecation warning:
      *      'This method is deprecated. Use $$ instead' + stack that will help to find where this method was used
      *      
      *
      */
-    Deprecate: function(message, eachCall) {
+    deprecate: function(message, eachCall) {
         var warned = false;
         return function(method, args) {
             if (!warned || eachCall) {
