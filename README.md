@@ -10,55 +10,93 @@ How to use
 
 Function method that adds decorator pattern.
 
-	var someFunction() {
+	var method = function() {
 		...
-	}.decorate(decorator(decoratorArg1, decoratorArg2, ...));
+	}.decorate(decorator(arg1, arg2, ...));
+
+OR
+
+	var method = function() {
+		...
+	}.decorate('decoratorName', arg1, arg2, ...);
 
 `decorator` function that passed into has two arguments: method to be decorated and its arguments, so you can controll arguments, returned values, decide when the default method should be called or not called at all, etc.
+Also it could be a name of the decorator from the collection
 
 
-Function.Decorators
+Function.Decorators.Collection
 ----------
 
 
-**Function.Decorators.StrictArguments**
+**Function.Decorators.add**
+
+Adds decoraton into collection that it can be applied by name
+
+	var outputFormat = function(limit) {
+		return function(method, args) {
+			return method.apply(this, args).substr(0, limit);
+		}
+	}
+
+	Function.Decorators.add('outputFormat', outputFormatter);
+
+And later:
+
+	var getOuput = function() {
+		...
+		return someString;
+		}.decorate('outputFormat', 30); // Limit output string to 30 chars
+
+OR it's still possible to use it dirrectly from collection
+
+	var getOuput = function() {
+		...
+		return someString;
+	}.decorate(Function.Decorators.Collection.outputFormatter(30));
+
+
+Function.Decorators.Collection
+----------
+
+
+**strictArguments**
 
 Decorate function with parameters validation.
 
 	function(numParam, strParam, boolParam) {
 		...
-	}.decorate(Function.Decorators.StrictArguments('number', 'string', 'boolean'))
+	}.decorate('strictArguments', 'number', 'string', 'boolean')
 
 Will require exact 3 arguments with 'number', 'string', 'boolean' types, otherwise throw error message.
 
 
 
-**Function.Decorators.StrictReturn**
+**strictReturn**
 
 Decorate function with returned value validation.
 
 	function() {
 		...
 		retrun result;
-	}.decorate(Function.Decorators.StrictReturn('number'))
+	}.decorate('strictReturn', 'number')
 
 Will require 'number' type value to be returned by the function, otherwise throw error message.
 
 
 
-**Function.Decorators.Throttle**
+**throttle**
 
 Decorate function with trottle pattern: it allows to call function only once per `interval` other calls within this interval will be ignored.
 
 	function throttled() {
 		...
-	}.decorate(Function.Decorators.Throttle(3000))
+	}.decorate('throttle', 3000)
 
 In case throttled() called it will run immediately and other calls within 3000ms will be ignored.
 
 
 
-**Function.Decorators.Debounce**
+**debounce**
 
 Decorate function with debounce pattern: it allows to slow down the function calls, in case debounced function is called it will run only after `interval`. In case function will be called within this interval it will clear old one and create new interval.
 
@@ -67,18 +105,18 @@ Press some key, in case no other key pressed within 300 ms it will make ajax req
 
 	$('auto-suggested-field').addEvent(
 		'keyup',
-		sendRequest.decorate(Function.Decorators.Throttle(300))
+		sendRequest.decorate('debounce', 300)
 	);
 
 
 
-**Function.Decorators.Queue**
+**queue**
 
 Decorate function with queue pattern: all function calls will be run one by one after `interval` ms.
 
 	function queued() {
 		alert('call')
-	}.decorate(Function.Decorators.Queue(3000))
+	}.decorate('queue', 3000)
 
 	queued();
 	queued();
@@ -96,17 +134,17 @@ Decorate function with fireBug profiler, so each run will be profiled with it
 
 	var calculating = function() {
 		...
-	}.decorate(Function.Decorators.Profile('Profiling calculating() method'));
+	}.decorate('profile', 'Profiling calculating() method');
 
 
 
-**Function.Decorators.Deprecate**
+**deprecate**
 
 Decorate function deprecation warning
 
 	var getElementByClass = function() {
 		...
-	}.decorate(Function.Decorators.Deprecate('This method is deprecated. Use $$ instead'));
+	}.decorate('deprecate', 'This method is deprecated. Use $$ instead');
 
 Console will show the deprecation warning:
 `This method is deprecated. Use $$ instead` + call stack that will help to find where this method was used
