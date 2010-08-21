@@ -1,6 +1,8 @@
 Function.decorate
 ===========
 
+![Screenshot](http://github.com/fantactuka/mootools-decorator/raw/master/logo.png)
+
 Adds decorator functionality and some basic decorators
 
 How to use
