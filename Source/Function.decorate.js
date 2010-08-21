@@ -17,6 +17,7 @@ provides: [Function.decorate, Function.Decorators]
 */
 
 Function.implement({
+
     /**
      * Function method that adds decorator pattern.
      * @method decorate
@@ -53,6 +54,7 @@ Function.implement({
             };
         }
     }
+    
 });
 
 Function.Decorators = {};
