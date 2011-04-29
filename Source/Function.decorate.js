@@ -6,7 +6,7 @@ license: MIT-style
 
 authors:
 - Maksim Horbachevsky
-- Arian Stolwijk (proposed to use string shortcut for decorators from the collection) 
+- Arian Stolwijk
 
 requires:
 - /Native
@@ -46,17 +46,14 @@ provides: [Function.decorate, Function.Decorators]
          *
          */
         decorate: function() {
-            var args = Array.prototype.slice.call(arguments), decorator = args.shift(), method = this;
+            var args = Array.prototype.slice.call(arguments),
+                    decorator = args.shift(),
+                    method = this,
+                    wrapper = $type(decorator) == 'function' ? decorator : Function.Decorators.Collection[decorator](args);
 
-            if ($type(decorator) == 'function') {
-                return function() {
-                    return decorator.apply(this, [method, arguments]);
-                };
-            } else {
-                return function() {
-                    return Function.Decorators.Collection[decorator](args).apply(this, [method, arguments]);
-                };
-            }
+            return function() {
+                return wrapper.apply(this, [method, arguments]);
+            };
         }
 
     });
