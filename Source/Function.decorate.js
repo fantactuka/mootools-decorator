@@ -62,7 +62,7 @@ provides: [Function.decorate, Function.Decorators]
 
     /**
      *
-     * Adds decoraton into collection that it can be applied by name
+     * Adds decoration into collection that it can be applied by name
      *
      * @method add
      * @param name {String} - decorator name
@@ -80,14 +80,14 @@ provides: [Function.decorate, Function.Decorators]
      *
      * And later:
      *
-     *      var getOuput = function() {
+     *      var getOutput = function() {
      *          ...
      *          return someString;
      *      }.decorate('outputFormat', 30); // Limit output string to 30 chars
      *
-     * OR it's still possible to use it dirrectly from collection
+     * OR it's still possible to use it directly from collection
      *
-     *      var getOuput = function() {
+     *      var getOutput = function() {
      *          ...
      *          return someString;
      *      }.decorate(Function.Decorators.Collection.outputFormatter(30));
@@ -145,7 +145,7 @@ provides: [Function.decorate, Function.Decorators]
          *
          *      var example = function() {
          *          ...
-         *          retrun result;
+         *          return result;
          *      }.decorate('strictReturn', 'number')
          *
          *      Will require 'number' type value to be returned by the function,
@@ -164,7 +164,7 @@ provides: [Function.decorate, Function.Decorators]
 
 
         /**
-         * Decorate function with trottle pattern: it allows to call function only once per `interval`
+         * Decorate function with throttle pattern: it allows to call function only once per `interval`
          * other calls within this interval will be ignored.
          *
          * @method throttle
@@ -175,7 +175,7 @@ provides: [Function.decorate, Function.Decorators]
          *
          *      var throttled = function() {
          *          ...
-         *          retrun result;
+         *          return result;
          *      }.decorate('throttle', 3000)
          *
          *      In case throttled() called it will run immediately and in case it will be called again within 3000ms
